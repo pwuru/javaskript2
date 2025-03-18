@@ -1,22 +1,28 @@
 async function process() {
     let r = await fetch("/data.json");
     let data = await r.json();
+    console.log(data)
 
-    data.forEach(item => {
-        let rating = parseInt(item['Оцени работу преподавателя по шкале от 1-10 / 10 – высоко оцениваю работу преподавателя. 1 – совсем не понравилась работа преподавателя']);
-        
-        if (rating >= 1 && rating <= 8) {
-            console.log("преподавателю есть над чем поработать");
-        }
-    });
+    function fillSelect(key, selector) {
+        let mappedData = data.map(item => item[key]);
+        let uniqueValues = [...new Set(mappedData)];
+        console.log(uniqueValues);
 
-    data.forEach(item => {
-        let rating = parseInt(item['Оцени работу преподавателя по шкале от 1-10 / 10 – высоко оцениваю работу преподавателя. 1 – совсем не понравилась работа преподавателя']);
-        
-        if (rating >= 9 && rating <= 10) {
-            console.log("препод огонь");
-        }
-    });
+        let select = document.querySelector(selector);
+        console.log(select);
+
+        uniqueValues.forEach(item => {
+            let option = document.createElement("option");
+            option.value = item;
+            option.text = item;
+            select.add(option)
+        });
+    }
+
+    // Для каждого выпадающего списка вызываем функцию
+    fillSelect('Насколько курс был полезен?', "#selectPoleznost");
+    fillSelect('Насколько доволен форматом обучения?', "#selectNaskolkoDovolen");
+    fillSelect('Отметь, в какой мере ты удовлетворен курсом?', "#selectNaskolkoUdovletvoren");
 }
 
-process();
+process()
